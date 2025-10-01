@@ -117,8 +117,8 @@ export default function UserButton({
         >
           <Avatar className={avatarSizes[size]}>
             <AvatarImage
-              src={user.image || ""}
-              alt={user.name || "User avatar"}
+              src={user?.image ?? ""}
+              alt={user?.name ?? "User avatar"}
             />
             <AvatarFallback className="bg-primary text-primary-foreground font-medium">
               {getUserInitials(user.name, user.email)}
@@ -166,7 +166,7 @@ export default function UserButton({
             </div>
             {showMemberSince && (
               <p className="text-xs text-muted-foreground">
-                Member since {formatMemberSince(user.createdAt)}
+                Member since {formatMemberSince(user?.createdAt as Date)}
               </p>
             )}
           </div>

@@ -4,7 +4,6 @@ import UserButton from "@/components/auth/user-button";
 export default async function Home() {
 
   const user = await currentUser();
-  console.log("user: ", user);
 
   return (
     <div>

@@ -3,6 +3,6 @@ export interface UserData {
   email: string | null;
   name: string | null;
   image: string | null;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
