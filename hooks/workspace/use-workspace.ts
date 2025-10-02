@@ -14,7 +14,7 @@ export function useWorkspaces(){
 /*  
 * useCreateWorkspace
 */
-export function useCreateWorkspace(name:string){
+export function useCreateWorkspace(){
     const queryClient = useQueryClient();
 
     return useMutation({
