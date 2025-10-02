@@ -1,9 +1,11 @@
 import { currentUser } from "@/actions/auth";
+import { initializeWorkspace } from "@/actions/workspace";
 import Header from "@/components/layout/header";
 
 export default async function Layout({ children }: Readonly<{ children: React.ReactNode }>) {
 
     const user = await currentUser();
+    const workspace = await initializeWorkspace();
 
     return (
         <>
