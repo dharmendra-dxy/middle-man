@@ -10,7 +10,7 @@ export default async function Layout({ children }: Readonly<{ children: React.Re
     return (
         <>
             {/* @ts-ignore */}
-            <Header user={user}/>
+            <Header user={user} />
 
             <main className="max-h-[calc(100vh-4rem)] h-[calc(100vh-4rem)] flex flex-1 overflow-hidden">
                 <div className="flex h-full w-full">

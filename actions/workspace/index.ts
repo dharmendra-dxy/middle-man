@@ -61,7 +61,7 @@ export const initializeWorkspace = async () => {
 /* 
 getWorkspace
 */
-export const getWorkspace = async () => {
+export const getWorkspaces = async () => {
      const user = await currentUser();
 
     if(!user?.id) {
