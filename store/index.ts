@@ -6,7 +6,7 @@ interface WorkspaceState {
     setSelectedWorkspace: (workspace:Workspace) => void;
 }
 
-export const useWorkspaceState = create<WorkspaceState>((set) => ({
+export const useWorkspaceStore = create<WorkspaceState>((set) => ({
     selectedWorkspace: null,
     setSelectedWorkspace: (workspace) => set(()=>({selectedWorkspace: workspace})),
 }));

@@ -5,8 +5,7 @@ import { createCollection, deleteCollection, editCollection, getCollections } fr
 /* 
 * useCollections
 */
-``
-export async function useCollections(workspaceId: string){
+export function useCollections(workspaceId: string){
     return useQuery({
         queryKey: ["collections", workspaceId],
         queryFn: async () => getCollections(workspaceId),
@@ -17,11 +16,11 @@ export async function useCollections(workspaceId: string){
 * useCreateCollections
 */
 
-export async function useCreateCollections(name: string, workspaceId:string){
+export function useCreateCollections(workspaceId:string){
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: async () => createCollection(name, workspaceId),
+        mutationFn: async (name: string) => createCollection(name, workspaceId),
         onSuccess: () => {
             queryClient.invalidateQueries({queryKey: ["collections", workspaceId]})
         }
@@ -32,7 +31,7 @@ export async function useCreateCollections(name: string, workspaceId:string){
 * useDeleteCollections
 */
 
-export async function useDeleteCollections(collectionId:string){
+export function useDeleteCollections(collectionId:string){
     const queryClient = useQueryClient();
 
     return useMutation({
@@ -47,7 +46,7 @@ export async function useDeleteCollections(collectionId:string){
 * useEditCollections
 */
 
-export async function useEditCollections(collectionId:string, name:string){
+export function useEditCollections(collectionId:string, name:string){
     const queryClient = useQueryClient();
 
     return useMutation({

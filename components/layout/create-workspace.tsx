@@ -1,6 +1,6 @@
 "use client";
 
-import { useCreateWorkspace } from "@/hooks/workspace/use-workspace";
+import { useCreateWorkspace } from "@/hooks/workspace/use-workspace.hook";
 import React, { useState } from "react";
 import { toast } from "sonner";
 import Modal from "../common/modal";

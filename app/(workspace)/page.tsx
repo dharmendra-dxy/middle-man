@@ -1,14 +1,44 @@
-import { currentUser } from "@/actions/auth";
-import UserButton from "@/components/auth/user-button";
+"use client";
 
-export default async function Home() {
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from "@/components/ui/resizable"
+import { useWorkspaceStore } from "@/store";
+import { useGetWorkspace } from "@/hooks/workspace/use-workspace.hook";
+import Loader from "@/components/common/loader";
+import TabbedSidebar from "@/components/collection/tabbed-sidebar";
 
-  const user = await currentUser();
+export default function Home() {
+
+  const { selectedWorkspace } = useWorkspaceStore();
+  const { data, isPending } = useGetWorkspace(selectedWorkspace?.id!);
+
+  const currentWorkspace = data?.data;
+
+  if (isPending) {
+    return (
+      <div className="h-full w-full flex items-center justify-center">
+        <Loader />
+      </div>
+    )
+  }
 
   return (
-    <div>
-      <h1 className="text-center text-2xl ">Home page</h1>
-      <UserButton user={user}/>
-    </div>
+    <section>
+      <ResizablePanelGroup direction="horizontal">
+        <ResizablePanel defaultSize={65}>
+          <h1>Request Playground</h1>
+        </ResizablePanel>
+        <ResizableHandle withHandle />
+        <ResizablePanel defaultSize={35} maxSize={40} minSize={20}>
+          <div className="flex-1">
+              {/* @ts-ignore */}
+              <TabbedSidebar currentWorkspace={currentWorkspace}/>
+          </div>
+        </ResizablePanel>
+      </ResizablePanelGroup>
+    </section>
   );
 }

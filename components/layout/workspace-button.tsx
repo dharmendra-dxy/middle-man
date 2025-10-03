@@ -5,16 +5,17 @@ import { HintTooltip } from "../common/hint-tooltip";
 import { Button } from "../ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { Plus, User } from "lucide-react";
-import { useWorkspaces } from "@/hooks/workspace/use-workspace";
+import { useWorkspaces } from "@/hooks/workspace/use-workspace.hook";
 import Loader from "../common/loader";
-import { useWorkspaceState } from "@/store";
+import { useWorkspaceStore } from "@/store";
 import { Separator } from "../ui/separator";
 import CreateWorkspace from "./create-workspace";
+import { Workspace } from "@/types/workspace";
 
 const WorkspaceButton = () => {
 
     const { data: workspaces, isLoading } = useWorkspaces();
-    const { selectedWorkspace, setSelectedWorkspace } = useWorkspaceState();
+    const { selectedWorkspace, setSelectedWorkspace } = useWorkspaceStore();
 
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
@@ -24,7 +25,7 @@ const WorkspaceButton = () => {
             // @ts-ignore
             setSelectedWorkspace(workspaces?.data[0]);
         }
-    }, [])
+    }, [workspaces, selectedWorkspace, setSelectedWorkspace])
 
 
     if (isLoading) return <Loader size={18} />
@@ -41,7 +42,7 @@ const WorkspaceButton = () => {
                 <Select
                     value={selectedWorkspace?.id}
                     onValueChange={(id) => {
-                        const ws = workspaces?.data?.find((item) => item?.id === id);
+                        const ws:Workspace = workspaces?.data?.find((item) => item?.id === id);
                         if (ws) setSelectedWorkspace(ws);
                     }}
                 >
