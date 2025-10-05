@@ -5,8 +5,8 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/ui/resizable"
-import { useWorkspaceStore } from "@/store";
-import { useGetWorkspace } from "@/hooks/workspace/use-workspace.hook";
+import { useWorkspaceStore } from "@/store/use-workspace.store";
+import { useGetWorkspace } from "@/hooks/use-workspace.hook";
 import Loader from "@/components/common/loader";
 import TabbedSidebar from "@/components/collection/tabbed-sidebar";
 

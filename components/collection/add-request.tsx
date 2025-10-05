@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import Modal from "../common/modal";
 import { Folder, Search } from "lucide-react";
 import { REST_METHOD } from "@prisma/client";
-import { useWorkspaceStore } from "@/store";
+import { useWorkspaceStore } from "@/store/use-workspace.store";
 import { useCollections } from "@/hooks/use-collection.hook";
 import { useAddRequestToCollection } from "@/hooks/use-request.hook";
 import { Input } from "../ui/input";

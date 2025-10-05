@@ -1,5 +1,5 @@
-import { currentUser } from "@/actions/auth";
-import { initializeWorkspace } from "@/actions/workspace";
+import { currentUser } from "@/actions/auth.actions";
+import { initializeWorkspace } from "@/actions/workspace.actions";
 import Header from "@/components/layout/header";
 
 export default async function Layout({ children }: Readonly<{ children: React.ReactNode }>) {

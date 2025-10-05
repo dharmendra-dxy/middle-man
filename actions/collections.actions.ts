@@ -1,7 +1,7 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { currentUser } from "./auth";
+import { currentUser } from "./auth.actions";
 
 /* 
 * createCollection
