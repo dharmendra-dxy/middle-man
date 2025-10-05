@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/ui/theme-provider";
 import { QueryProvider } from "@/lib/query-provider";
 import { Toaster } from "sonner";
+import { HotkeysProviders } from "@/lib/hotkeys-provider";
 
 const popins = Poppins({
   subsets: ["latin"],
@@ -32,8 +33,10 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
+            <HotkeysProviders>
             {children}
             <Toaster/>
+            </HotkeysProviders>
           </ThemeProvider>
         </QueryProvider>
       </body>

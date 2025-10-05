@@ -9,6 +9,7 @@ import { useWorkspaceStore } from "@/store/use-workspace.store";
 import { useGetWorkspace } from "@/hooks/use-workspace.hook";
 import Loader from "@/components/common/loader";
 import TabbedSidebar from "@/components/collection/tabbed-sidebar";
+import RequestPlayground from "@/components/request-playground/request-playground";
 
 export default function Home() {
 
@@ -29,7 +30,7 @@ export default function Home() {
     <section>
       <ResizablePanelGroup direction="horizontal">
         <ResizablePanel defaultSize={65}>
-          <h1>Request Playground</h1>
+          <RequestPlayground/>
         </ResizablePanel>
         <ResizableHandle withHandle />
         <ResizablePanel defaultSize={35} maxSize={40} minSize={20}>
