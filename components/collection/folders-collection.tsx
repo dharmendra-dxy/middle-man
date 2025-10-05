@@ -8,6 +8,7 @@ import AddRequestModal from "./add-request";
 import { useGetAllRequestFromCollection } from "@/hooks/use-request.hook";
 import { CollapsibleContent } from "@radix-ui/react-collapsible";
 import { requestColorMap } from "@/constant/requestsColor";
+import { useRequestPlaygroundStore } from "@/store/use-request.store";
 
 interface Props {
   collection: {
@@ -29,6 +30,8 @@ const FoldersCollection = ({ collection }: Props) => {
 
   const requestsData = data?.data;
   const hasRequests = requestsData && requestsData.length > 0;
+
+  const {openRequestTab} = useRequestPlaygroundStore();
 
   return (
     <>
@@ -130,7 +133,7 @@ const FoldersCollection = ({ collection }: Props) => {
                     {requestsData.map((request: any) => (
                       <div
                         key={request.id}
-                        // onClick={() => openRequestTab(request)}
+                        onClick={() => openRequestTab(request)}
                         className="flex items-center justify-between py-2 px-3 hover:bg-zinc-900/50 rounded-md cursor-pointer group transition-colors"
                       >
                         <div className="flex items-center space-x-3 flex-1">

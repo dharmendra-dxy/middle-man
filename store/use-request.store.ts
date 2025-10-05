@@ -74,7 +74,10 @@ export const useRequestPlaygroundStore = create<PlaygroundState>((set) => ({
 			}))
 		},
 
-		/* openRequestTab: to open or make a particluar tab active */
+		/* 
+			* openRequestTab: to open or make a particluar tab active 
+			* usecase: to click and open request from collection to playground
+		*/
 		openRequestTab: (req) =>
     set((state) => {
 
