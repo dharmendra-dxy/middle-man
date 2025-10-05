@@ -16,7 +16,6 @@ const TabbedSidebar = ({ currentWorkspace }: { currentWorkspace: Workspace }) =>
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const collections = data?.data;
-  console.log("collections: ", collections);
   const sidebarItems = [
     { icon: Archive, label: "Collections" },
     { icon: Clock, label: "Clock" },

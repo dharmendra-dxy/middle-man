@@ -3,6 +3,7 @@ import { useRequestPlaygroundStore } from "@/store/use-request.store";
 import { REST_METHOD } from "@prisma/client";
 import { Dot, Plus, X } from "lucide-react";
 import React, { useState } from "react";
+import AddNameModal from "./add-name-modal";
 
 const TabBar = () => {
 
@@ -11,7 +12,10 @@ const TabBar = () => {
 	const [selectedTabId, setSelectedTabId] = useState<string | null>(null);
 
 
-	const onDoubleClick = (id: string) => {
+	const onDoubleClick = (tabId: string) => {
+		console.log("hello");
+		setSelectedTabId(tabId);
+		setRenameModelOpen(true);
 	}
 
 	return (
@@ -53,6 +57,15 @@ const TabBar = () => {
 			>
 				<Plus size={16} />
 			</button>
+
+			{
+				selectedTabId && 
+				<AddNameModal
+					isModalOpen={renameModelOpen}
+					setIsModalOpen={setRenameModelOpen}
+					tabId={selectedTabId}
+				/>
+			}
 		</div>
 
 	);
