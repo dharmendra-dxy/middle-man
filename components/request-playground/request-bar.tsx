@@ -10,9 +10,10 @@ import { Save, Send } from "lucide-react";
 interface Props {
 	tab: RequestTab;
 	updateTab: (id: string, data: Partial<RequestTab>) => void;
+	handleSaveRequest: () => void;
 }
 
-const RequestBar = ({ tab, updateTab }: Props) => {
+const RequestBar = ({ tab, updateTab,handleSaveRequest  }: Props) => {
 
 	const onSendRequest = ()=>{}
 
@@ -52,8 +53,11 @@ const RequestBar = ({ tab, updateTab }: Props) => {
 					<Send size={16}/> Send
 				</Button>
 				<Button
-					type="button"
+					type="submit"
+					onClick={handleSaveRequest}
+					disabled={!tab?.unsavedChanges}
 					variant={"outline"}
+					className="cursor-pointer"
 				>
 					<Save size={16}/>
 				</Button>

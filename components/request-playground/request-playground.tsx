@@ -50,10 +50,7 @@ const RequestPlayground = () => {
     enableOnFormTags: true,
   }, []);
 
-  useHotkeys("ctrl+s, meta+shift+s", async (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-
+  const handleSaveRequest = async () => {
     if (!activeTab) {
       toast.error("Please select a tab before saving");
     }
@@ -78,7 +75,15 @@ const RequestPlayground = () => {
     else {
       setShowSaveModal(true);
     }
-  },{
+  }
+
+  useHotkeys("ctrl+s, meta+shift+s", async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    handleSaveRequest();
+
+  }, {
     preventDefault: true,
     enableOnFormTags: true,
   }, [activeTab]);
@@ -91,7 +96,7 @@ const RequestPlayground = () => {
       <TabBar />
 
       <div className="flex-1 overflow-auto">
-        <RequestEditor />
+        <RequestEditor handleSaveRequest={handleSaveRequest}/>
       </div>
 
       {/* Model : saveRequestToCollections */}
