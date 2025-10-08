@@ -3,6 +3,7 @@ import React from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import KeyValueFormEditor from "./key-value-form";
 import { toast } from "sonner";
+import BodyEditor from "./body-editor";
 
 interface Props {
   tab: RequestTab;
@@ -105,14 +106,9 @@ const RequestEditorArea = ({ tab, updateTab }: Props) => {
         />
       </TabsContent>
       <TabsContent value="body">
-        <KeyValueFormEditor
+        <BodyEditor
           initialData={getBodyData()}
           onSubmit={handleBodyChange}
-          placeholder={{
-            key: "Parameter name",
-            value: "Parameter value",
-            description: "URL parameter",
-          }}
         />
       </TabsContent>
 
