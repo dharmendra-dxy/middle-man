@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useForm, useFieldArray, Control } from "react-hook-form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -85,6 +85,67 @@ const KeyValueFormEditor = ({
   const removeRow = (index: number) => {
     if (fields.length > 1) remove(index);
   }
+
+  /* 
+  * Auto save functionality
+  * Auto save the changes with de-bounce
+  * use case: to save the params/headers of user while swithching tabs
+  */
+
+  const lastSavedRef = useRef<string | null>(null);
+
+  const getFilteredItemsFromValues = (items: KeyValueItem[]) =>
+    items
+      .filter((item) => item.enabled && (item.key.trim() || item.value.trim()))
+      .map(({ key, value }) => ({ key, value }));
+
+  // simple de-bounce implementation:
+  const debounce = (fn: (...args: any[]) => void, wait = 500) => {
+    let t: ReturnType<typeof setTimeout> | null = null;
+    return (...args: any[]) => {
+      if (t) clearTimeout(t);
+      t = setTimeout(() => fn(...args), wait);
+    };
+  }
+
+  const saveIfChanged = useCallback((items: KeyValueItem[]) => {
+    const filtered = getFilteredItemsFromValues(items);
+    const serialized = JSON.stringify(filtered);
+    if (serialized !== lastSavedRef.current) {
+      lastSavedRef.current = serialized;
+      onSubmit(filtered);
+    }
+  }, [onSubmit]);
+
+  const debouncedSaveRef = useRef(saveIfChanged);
+
+  /* 
+  * useEffect : keep ref up to date when saveIfChanged changes
+  */
+  useEffect(() => {
+    debouncedSaveRef.current = saveIfChanged;
+  }, [saveIfChanged]);
+
+  const debouncedInvokerRef = useRef<((items: KeyValueItem[]) => void) | null>(
+    null
+  );
+
+  useEffect(() => {
+    debouncedInvokerRef.current = debounce((items: KeyValueItem[]) => {
+      debouncedSaveRef.current(items);
+    }, 500);
+  }, []);
+
+  // Watch form values and trigger debounced save
+  useEffect(() => {
+    const subscription = form.watch((value) => {
+      const items = (value as KeyValueFormData)?.items || [];
+      debouncedInvokerRef.current?.(items as KeyValueItem[]);
+    });
+
+    return () => subscription.unsubscribe();
+  }, [form]);
+
 
   return (
     <div className={cn("w-full", className)}>
