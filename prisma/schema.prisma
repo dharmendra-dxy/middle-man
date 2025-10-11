@@ -122,16 +122,15 @@ model WorkspaceMember {
  * ------------------------------------------------------------------
  */
 model Collection {
-  id          String    @id @default(cuid())
-  name        String
+  id   String @id @default(cuid())
+  name String
 
   workspaceId String
   workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  requests     Request[]
+  requests    Request[]
 
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @default(now()) @updatedAt
-  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
 }
 
 enum REST_METHOD {
@@ -155,6 +154,20 @@ model Request {
   collectionId String
   collection   Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
 
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @default(now()) @updatedAt
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @default(now()) @updatedAt
+  RequestRun RequestRun[]
+}
+
+model RequestRun {
+  id        String  @id @default(cuid())
+  requestId String
+  request   Request @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  status     Int
+  statusText String?
+  headers    Json?
+  body       Json?
+  durationMs Int?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now()) @updatedAt
 }

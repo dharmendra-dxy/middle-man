@@ -2,6 +2,7 @@
 
 import prisma from "@/lib/prisma";
 import { Request } from "@/types/request";
+import { sendRequest } from "@/utils/request/sendRequest";
 
 /* 
 * Create a new Request -> and it should be save to collections
@@ -96,4 +97,171 @@ export const getAllRequestFromCollection = async (collectionId: string) => {
         }
     }
 
+}
+
+/*  
+* ---------------------------------------------------------- 
+* API CALLING    
+* ---------------------------------------------------------- 
+*/
+
+/* 
+* RUN
+*/
+export const run = async (requestId: string) => {
+    try{
+        const request =  await prisma.request.findUnique({
+            where: {id: requestId},
+        }); 
+
+        if(!request){
+            return {
+                success: false,
+                error: `Failed to find request with requestid: ${requestId}`,
+                data: null,
+            }   
+        }
+
+				// requestConfiguration:
+			  const requestConfig = {
+					method: request.method,
+					url: request.url,
+					headers: request.headers as Record<string, string> || undefined,
+					params: request.parameters as Record<string, any> || undefined,
+					body: request.body || undefined
+    		};
+
+				const result = await sendRequest(requestConfig);
+
+				const requestRun = await prisma.requestRun.create({
+					data: {
+						requestId: request.id,
+						status: result.status || 0,
+						statusText: result.statusText || (result.error ? 'Error' : null),
+						headers: result.headers || "",
+						body: result.data ? (typeof result.data === 'string' ? result.data : JSON.stringify(result.data)) : "",
+						durationMs: result.duration || 0
+					}
+				})
+
+				if(result.data && !result.error){
+					await prisma.request.update({
+						where: {id: requestId},
+						data: {
+							response: result.data,
+							updatedAt: new Date(),
+						}
+					})
+				}
+
+				return {
+					success: true,
+					message: "Request run succesfully",
+					data: result,
+					requestRun:requestRun
+				}
+    }
+    catch(error:any){
+
+			try{
+				// to catch the status code for the failed request:
+				const failedRun = await prisma.requestRun.create({
+					data: {
+						requestId,
+						status: 0,
+						statusText: "Failed",
+						headers: "",
+						body: error.message,
+						durationMs: 0
+					}
+				})
+
+				return {
+					success: false,
+					error: error.message,
+					data: null,
+					requestRun:failedRun
+				}
+			}
+			catch(dbError){
+				return {
+					success: false,
+					error: `Request run failed: ${error.message}. DB saved failed: ${(dbError as Error).message}`,
+					data: null,
+					requestRun:null,
+				}
+			}
+    }
+} 
+
+/* 
+* Direct RUN: Run without saving the tab
+*/
+export async function runDirect(requestData: {
+  id: string;
+  method: string;
+  url: string;
+  headers?: Record<string, string>;
+  parameters?: Record<string, any>;
+  body?: any;
+}) {
+  try {
+    const requestConfig = {
+      method: requestData.method,
+      url: requestData.url,
+      headers: requestData.headers,
+      params: requestData.parameters,
+      body: requestData.body
+    };
+
+    const result = await sendRequest(requestConfig);
+
+    const requestRun = await prisma.requestRun.create({
+      data: {
+        requestId: requestData.id,
+        status: result.status || 0,
+        statusText: result.statusText || (result.error ? 'Error' : null),
+        headers: result.headers || "",
+        body: result.data ? (typeof result.data === 'string' ? result.data : JSON.stringify(result.data)) : "",
+        durationMs: result.duration || 0
+      }
+    });
+
+    // Update request with latest response if successful
+    if (result.data && !result.error) {
+      await prisma.request.update({
+        where: { id: requestData.id },
+        data: {
+          response: result.data,
+          updatedAt: new Date()
+        }
+      });
+    }
+
+    return {
+      success: true,
+			message: "Request direct run successfull",
+      data:result,
+      requestRun: requestRun,
+    };
+
+  } catch (error: any) {
+    const failedRun = await prisma.requestRun.create({
+      data: {
+        requestId: requestData.id,
+        status: 0,
+        statusText: 'Failed',
+        headers: "",
+        body: error.message,
+        durationMs: 0
+      }
+    });
+
+    return {
+      success: false,
+      error: error.message,
+			data: null,
+      requestRun: failedRun
+    };
+  }
 }
