@@ -29,11 +29,11 @@ export default function Home() {
   return (
     <section>
       <ResizablePanelGroup direction="horizontal">
-        <ResizablePanel defaultSize={65}>
+        <ResizablePanel defaultSize={65}  minSize={40}>
           <RequestPlayground/>
         </ResizablePanel>
         <ResizableHandle withHandle />
-        <ResizablePanel defaultSize={35} maxSize={40} minSize={20}>
+        <ResizablePanel defaultSize={35} maxSize={40} minSize={20} className="flex">
           <div className="flex-1">
               {/* @ts-ignore */}
               <TabbedSidebar currentWorkspace={currentWorkspace}/>

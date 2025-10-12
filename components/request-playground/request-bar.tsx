@@ -6,6 +6,8 @@ import { REST_METHOD } from "@prisma/client";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { Save, Send } from "lucide-react";
+import { useRunRequest } from "@/hooks/use-request.hook";
+import { toast } from "sonner";
 
 interface Props {
 	tab: RequestTab;
@@ -15,7 +17,17 @@ interface Props {
 
 const RequestBar = ({ tab, updateTab,handleSaveRequest  }: Props) => {
 
-	const onSendRequest = ()=>{}
+	const {mutateAsync, isPending} = useRunRequest(tab?.requestId!);
+
+	const onSendRequest = async()=>{
+		try{
+			const res = await mutateAsync();
+			toast.success("Request sent successfully");
+		}
+		catch(error){
+			toast.error("Failed to send request");
+		}
+	}
 
 	return (
 		<div className="flex flex-row items-center justify-between bg-zinc-900 rounded-md p-2 w-full">

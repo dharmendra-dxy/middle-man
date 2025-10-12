@@ -50,6 +50,10 @@ const RequestPlayground = () => {
     enableOnFormTags: true,
   }, []);
 
+  /* 
+  Hotkeys : HandleSaveRequest : CTRL+S
+  */
+
   const handleSaveRequest = async () => {
     if (!activeTab) {
       toast.error("Please select a tab before saving");

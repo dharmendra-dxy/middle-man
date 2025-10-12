@@ -1,7 +1,7 @@
 import React from "react";
 import { create } from "zustand";
 import { nanoid } from "nanoid";
-import { RequestTab, SavedRequest } from "@/types/request";
+import { RequestTab, ResponseData, SavedRequest } from "@/types/request";
 
 type PlaygroundState = {
     tabs: RequestTab[];
@@ -13,14 +13,17 @@ type PlaygroundState = {
     markUnsaved: (id:string, value:boolean) => void;
     openRequestTab: (req:any) => void;
     updateTabFromSavedRequest: (tabId: string, savedRequest: SavedRequest) => void;
-    // responseViewerData: ResponseData| null;
-    // setResponseViewerData: (data: ResponseData) => void;
+    responseViewerData: ResponseData| null;
+    setResponseViewerData: (data: ResponseData) => void;
 }
 
 // @ts-ignore
 export const useRequestPlaygroundStore = create<PlaygroundState>((set) => ({
     tabs: [],
 		activeTabId: null,
+
+		responseViewerData:null,
+  	setResponseViewerData: (data) => set({ responseViewerData: data }),
 
 		/* addTab : to add a new tab in tabs[] and set activeTabId */
 		addTab: ()=>{

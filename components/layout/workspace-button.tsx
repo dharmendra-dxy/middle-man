@@ -21,7 +21,7 @@ const WorkspaceButton = () => {
 
     useEffect(() => {
         // @ts-ignore
-        if (workspaces && workspaces?.data.length > 0 && !selectedWorkspace) {
+        if (workspaces && workspaces?.data?.length > 0 && !selectedWorkspace) {
             // @ts-ignore
             setSelectedWorkspace(workspaces?.data[0]);
         }
