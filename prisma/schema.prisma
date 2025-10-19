@@ -9,6 +9,26 @@ datasource db {
 
 /**
  * ---------------------------------------------------------------------------
+ * enum  : Role, RestMethods
+ * ---------------------------------------------------------------------------
+ */
+
+enum MEMBER_ROLE {
+  ADMIN
+  EDITOR
+  VIEWER
+}
+
+enum REST_METHOD {
+  GET
+  POST
+  PUT
+  PATCH
+  DELETE
+}
+
+/**
+ * ---------------------------------------------------------------------------
  * USER and AUTHENTICATION
  * ---------------------------------------------------------------------------
  */
@@ -25,6 +45,7 @@ model User {
 
   workspaces Workspace[]       @relation("UserWorkspaces")
   membership WorkspaceMember[]
+  workspaceInvites WorkspaceInvite[]
 
   @@unique([email])
   @@map("user")
@@ -77,7 +98,7 @@ model Verification {
 
 /**
  * ---------------------------------------------------------------------------
- * WORKSPACE and MEMBERS
+ * WORKSPACE and MEMBERS and INVITE
  * ---------------------------------------------------------------------------
  */
 
@@ -89,6 +110,7 @@ model Workspace {
   owner       User    @relation("UserWorkspaces", fields: [ownerId], references: [id])
 
   members     WorkspaceMember[]
+  invites     WorkspaceInvite[]
   collections Collection[]
   createdAt   DateTime          @default(now())
   updatedAt   DateTime          @default(now()) @updatedAt
@@ -96,10 +118,18 @@ model Workspace {
   @@unique([name, ownerId])
 }
 
-enum MEMBER_ROLE {
-  ADMIN
-  EDITOR
-  VIEWER
+model WorkspaceInvite {
+  id          String    @id @default(cuid())
+  token       String    @unique
+  expiresAt   DateTime?
+  workspaceId String
+  createdById String
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdBy User @relation(fields: [createdById], references: [id], onDelete: Cascade)
+
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @default(now()) @updatedAt
+
 }
 
 model WorkspaceMember {
@@ -133,14 +163,6 @@ model Collection {
   updatedAt DateTime @default(now()) @updatedAt
 }
 
-enum REST_METHOD {
-  GET
-  POST
-  PUT
-  PATCH
-  DELETE
-}
-
 model Request {
   id         String      @id @default(cuid())
   name       String
@@ -160,9 +182,9 @@ model Request {
 }
 
 model RequestRun {
-  id        String  @id @default(cuid())
-  requestId String
-  request   Request @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  id         String   @id @default(cuid())
+  requestId  String
+  request    Request  @relation(fields: [requestId], references: [id], onDelete: Cascade)
   status     Int
   statusText String?
   headers    Json?
